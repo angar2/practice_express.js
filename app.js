@@ -30,7 +30,7 @@ app.use(passport.session())
 app.get('/', (req, res) => {
     let title = '메모장'
     let authStatus = auth.Status(req, res)
-    let body = template.bodyHome(title,authStatus)
+    let body = template.bodyHome(title, authStatus)
     let html = template.html(body)
     res.send(html)
 })
@@ -38,7 +38,8 @@ app.get('/', (req, res) => {
 app.get('/signup', (req, res) => {
     let title = 'Sign up'
     let authStatus = auth.Status(req, res)
-    let body = template.bodySignup(title,authStatus)
+    let feedback = auth.feedback(req, res)
+    let body = template.bodySignup(title, authStatus, feedback)
     let html = template.html(body)
     res.send(html)
 })
@@ -50,14 +51,14 @@ app.post('/signup', (req, res) => {
     let password = post.password
     let password2 = post.password2
     if(password !==password2) {
-        res.write("<script>alert('Check password')</script>")
-        res.write("<script>window.location='/signup'</script>")
+        req.flash('error', 'Check password.')
+        res.redirect('/signup')
     }
     db.query(`SELECT * FROM user WHERE email=?`,[email], function(err, users){
         if(err){throw err}
         if(users.length !== 0) {
-            res.write("<script>alert('The email already exists')</script>")
-            res.write("<script>window.location='/signup'</script>")
+            req.flash('error', 'Email already exists.')
+            res.redirect('/signup')
         } else {
             bcrypt.hash(password, 11, function(err2, hash) {
                 if(err2){throw err2}
@@ -77,7 +78,8 @@ app.post('/signup', (req, res) => {
 app.get('/login', (req, res) => {
     let title = 'Login'
     let authStatus = auth.Status(req, res)
-    let body = template.bodyLogin(title,authStatus)
+    let feedback = auth.feedback(req, res)
+    let body = template.bodyLogin(title, authStatus, feedback)
     let html = template.html(body)
     res.send(html)
 })
