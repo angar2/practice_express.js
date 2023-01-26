@@ -54,6 +54,13 @@ app.post('/signup', (req, res) => {
     })
 })
 
+app.get('/login', (req, res) => {
+    let title = 'Login'
+    let body = template.bodyLogin(title)
+    let html = template.html(body)
+    res.send(html)
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
