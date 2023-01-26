@@ -1,0 +1,23 @@
+{
+  "name": "practice_express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "pm2 start app.js --watch --no-daemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://angar2@github.com/angar2/practice_express.js.git"
+  },
+  "author": "angari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angar2/practice_express.js/issues"
+  },
+  "homepage": "https://github.com/angar2/practice_express.js#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
