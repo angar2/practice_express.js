@@ -1,7 +1,12 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
 const template = require('./lib/template')
+const db = require('./lib/db')
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
     let title = '메모장'
@@ -15,6 +20,38 @@ app.get('/signup', (req, res) => {
     let body = template.bodySignup(title)
     let html = template.html(body)
     res.send(html)
+})
+
+app.post('/signup', (req, res) => {
+    let post = req.body
+    let email = post.email
+    let nickname = post.nickname
+    let password = post.password
+    let password2 = post.password2
+    if(password !==password2) {
+        res.write("<script>alert('Check password')</script>")
+        res.write("<script>window.location='/signup'</script>")
+    }
+    db.query(`SELECT * FROM user WHERE email=?`,[email], function(err, users){
+        if(err){throw err}
+        console.log(users)
+        if(users === undefined) {
+            res.write("<script>alert('The email already exists')</script>")
+            res.write("<script>window.location='/signup'</script>")
+        } else {
+            bcrypt.hash(password, 11, function(err2, hash) {
+                if(err2){throw err2}
+                db.query(
+                    `INSERT INTO user(email, password, nickname, created) 
+                      VALUES(?, ?, ?, NOW())`,
+                    [email, hash, nickname],
+                    function(err3, results){
+                        if(err3){throw err3}
+                        res.redirect('/login')
+                })
+            })
+        }
+    })
 })
 
 app.listen(port, () => {
