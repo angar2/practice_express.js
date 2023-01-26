@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const template = require('./lib/template')
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send(template.html())
 })
 
 app.listen(port, () => {
