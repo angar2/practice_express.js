@@ -88,6 +88,13 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true,
 }));
 
+app.get('/logout', (req, res) => {
+    req.logout(function(err) {
+        if(err) {throw err}
+        res.redirect('/')
+    })
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
