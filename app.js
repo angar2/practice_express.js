@@ -34,8 +34,7 @@ app.post('/signup', (req, res) => {
     }
     db.query(`SELECT * FROM user WHERE email=?`,[email], function(err, users){
         if(err){throw err}
-        console.log(users)
-        if(users === undefined) {
+        if(users.length !== 0) {
             res.write("<script>alert('The email already exists')</script>")
             res.write("<script>window.location='/signup'</script>")
         } else {
