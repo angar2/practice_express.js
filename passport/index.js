@@ -11,7 +11,7 @@ module.exports = function () {
     passport.deserializeUser(function(id, done) {
         db.query(`SELECT * FROM user WHERE id=?`,id, function(err, user){
             if(err){throw err}
-            done(null, user)
+            done(null, user[0])
         })
     });
 

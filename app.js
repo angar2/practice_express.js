@@ -11,6 +11,7 @@ const passportConfig = require('./passport')
 passportConfig()
 
 const template = require('./lib/template')
+const auth = require('./lib/auth')
 const db = require('./lib/db')
 const secrets = require('./secrets')
 
@@ -28,14 +29,16 @@ app.use(passport.session())
 
 app.get('/', (req, res) => {
     let title = '메모장'
-    let body = template.bodyHome(title)
+    let authStatus = auth.Status(req, res)
+    let body = template.bodyHome(title,authStatus)
     let html = template.html(body)
     res.send(html)
 })
 
 app.get('/signup', (req, res) => {
     let title = 'Sign up'
-    let body = template.bodySignup(title)
+    let authStatus = auth.Status(req, res)
+    let body = template.bodySignup(title,authStatus)
     let html = template.html(body)
     res.send(html)
 })
@@ -73,7 +76,8 @@ app.post('/signup', (req, res) => {
 
 app.get('/login', (req, res) => {
     let title = 'Login'
-    let body = template.bodyLogin(title)
+    let authStatus = auth.Status(req, res)
+    let body = template.bodyLogin(title,authStatus)
     let html = template.html(body)
     res.send(html)
 })
