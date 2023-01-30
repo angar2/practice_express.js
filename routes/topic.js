@@ -23,8 +23,7 @@ router.post('/create', (req, res) => {
         [title, desc, user_id],
         (err, result) => {
             if(err) {throw err}
-            res.redirect('/')
-            // res.redirect(`/topic/${result.insertId}`)
+            res.redirect(`/topic/${result.insertId}`)
     })
 })
 
@@ -41,10 +40,26 @@ router.get('/update/:topicId', async (req, res) => {
     })
 })
 
+router.post('/update/:topicId', (req, res) => {
+    let topicId = path.parse(req.params.topicId).base
+    let post = req.body
+    let title = post.title
+    let desc = post.desc
+    db.query(`UPDATE topic SET
+        title=?, description=?
+        WHERE id=?`,
+        [title, desc, topicId],
+        (err, result) => {
+            if(err) {throw err}
+            res.redirect(`/topic/${topicId}`)
+    })
+})
+
 router.get('/:topicId', async (req, res) => {
     let topicId = path.parse(req.params.topicId).base
     db.query(`SELECT * FROM topic WHERE id=?`,[topicId], async (err, results) => {
         if(err) {throw err}
+        console.log(results)
         let user_id = results[0].user_id
         db.query(`SELECT nickname FROM user WHERE id=?`,[user_id], async (err2, nickname) => {
             if(err) {throw err}
