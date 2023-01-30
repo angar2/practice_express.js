@@ -13,4 +13,18 @@ router.get('/create', (req, res) => {
     res.send(html)
 })
 
+router.post('/create', (req, res) => {
+    let post = req.body
+    let user_id = req.user.id
+    let title = post.title
+    let desc = post.desc
+    db.query(`INSERT INTO topic(title, description, user_id, created) VALUES(?, ?, ?, NOW())`,
+        [title, desc, user_id],
+        (err, result) => {
+            if(err) {throw err}
+            res.redirect('/')
+            // res.redirect(`/topic/${result.insertId}`)
+    })
+})
+
 module.exports = router
