@@ -55,11 +55,20 @@ router.post('/update/:topicId', (req, res) => {
     })
 })
 
+router.post('/delete', (req, res) => {
+    let topic_id = req.body.id
+    db.query(`DELETE FROM topic WHERE id=?`,
+        [topic_id],
+        (err, result) => {
+            if(err) {throw err}
+            res.redirect(`/`)
+    })
+})
+
 router.get('/:topicId', async (req, res) => {
     let topicId = path.parse(req.params.topicId).base
     db.query(`SELECT * FROM topic WHERE id=?`,[topicId], async (err, results) => {
         if(err) {throw err}
-        console.log(results)
         let user_id = results[0].user_id
         db.query(`SELECT nickname FROM user WHERE id=?`,[user_id], async (err2, nickname) => {
             if(err) {throw err}
