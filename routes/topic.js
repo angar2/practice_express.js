@@ -40,18 +40,18 @@ router.get('/update/:topicId', async (req, res) => {
     })
 })
 
-router.post('/update/:topicId', (req, res) => {
-    let topicId = path.parse(req.params.topicId).base
+router.post('/update', (req, res) => {
     let post = req.body
+    let topic_id = post.id
     let title = post.title
     let desc = post.desc
     db.query(`UPDATE topic SET
         title=?, description=?
         WHERE id=?`,
-        [title, desc, topicId],
+        [title, desc, topic_id],
         (err, result) => {
             if(err) {throw err}
-            res.redirect(`/topic/${topicId}`)
+            res.redirect(`/topic/${topic_id}`)
     })
 })
 
