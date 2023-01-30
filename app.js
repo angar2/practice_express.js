@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session)
@@ -14,6 +15,7 @@ const indexRouter = require('./routes/index.js')
 const authRouter = require('./routes/auth.js')
 const topicRouter = require('./routes/topic.js')
 
+app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
     secret: secrets.session.secret,
