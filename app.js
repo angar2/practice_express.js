@@ -12,6 +12,7 @@ const secrets = require('./secrets')
 
 const indexRouter = require('./routes/index.js')
 const authRouter = require('./routes/auth.js')
+const topicRouter = require('./routes/topic.js')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
@@ -26,13 +27,14 @@ app.use(passport.session())
 
 app.use('/', indexRouter)
 app.use('/auth', authRouter)
+app.use('/topic', topicRouter)
 
 app.use((req, res, next) => {
     res.status(404).send('Not Found.')
 });
 
 app.use((err, req, res, next) => {
-    console.error(error.stack)
+    console.error(err.stack)
     res.status(500).send('Internal Server Error.')
 })
 
