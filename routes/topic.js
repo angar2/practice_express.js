@@ -28,6 +28,19 @@ router.post('/create', (req, res) => {
     })
 })
 
+router.get('/update/:topicId', async (req, res) => {
+    let topicId = path.parse(req.params.topicId).base
+    db.query(`SELECT * FROM topic WHERE id=?`,[topicId], async (err, results) => {
+        if(err) {throw err}
+        let title = 'Update'
+        let list = await template.list(req, res)
+        let authStatus = auth.Status(req, res)
+        let body = template.bodyUpdate(title, results, authStatus, list)
+        let html = template.html(body)
+        res.send(html)
+    })
+})
+
 router.get('/:topicId', async (req, res) => {
     let topicId = path.parse(req.params.topicId).base
     db.query(`SELECT * FROM topic WHERE id=?`,[topicId], async (err, results) => {
