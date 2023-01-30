@@ -1,5 +1,6 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const path = require('path')
 
 const template = require('../lib/template')
 const auth = require('../lib/auth')
@@ -24,6 +25,23 @@ router.post('/create', (req, res) => {
             if(err) {throw err}
             res.redirect('/')
             // res.redirect(`/topic/${result.insertId}`)
+    })
+})
+
+router.get('/:topicId', async (req, res) => {
+    let topicId = path.parse(req.params.topicId).base
+    db.query(`SELECT * FROM topic WHERE id=?`,[topicId], async (err, results) => {
+        if(err) {throw err}
+        let user_id = results[0].user_id
+        db.query(`SELECT nickname FROM user WHERE id=?`,[user_id], async (err2, nickname) => {
+            if(err) {throw err}
+            results[0].nickname = nickname[0].nickname
+            let list = await template.list(req, res)
+            let authStatus = auth.Status(req, res)
+            let body = template.bodyDetail(results, authStatus, list)
+            let html = template.html(body)
+            res.send(html)
+        })
     })
 })
 
