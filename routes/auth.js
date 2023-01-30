@@ -7,7 +7,7 @@ const template = require('../lib/template')
 const auth = require('../lib/auth')
 const db = require('../lib/db')
 
-router.get('/signup', (req, res) => {
+router.get('/signup', auth.isNotLoggedIn, (req, res) => {
     let title = 'Sign up'
     let authStatus = auth.Status(req, res)
     let feedback = auth.feedback(req, res)
@@ -16,7 +16,7 @@ router.get('/signup', (req, res) => {
     res.send(html)
 })
 
-router.post('/signup', (req, res) => {
+router.post('/signup', auth.isNotLoggedIn, (req, res) => {
     let post = req.body
     let email = post.email
     let nickname = post.nickname
@@ -47,7 +47,7 @@ router.post('/signup', (req, res) => {
     })
 })
 
-router.get('/login', (req, res) => {
+router.get('/login', auth.isNotLoggedIn, (req, res) => {
     let title = 'Login'
     let authStatus = auth.Status(req, res)
     let feedback = auth.feedback(req, res)
@@ -56,13 +56,13 @@ router.get('/login', (req, res) => {
     res.send(html)
 })
 
-router.post('/login', passport.authenticate('local', {
+router.post('/login', auth.isNotLoggedIn, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/auth/login',
     failureFlash: true,
 }));
 
-router.get('/logout', (req, res) => {
+router.get('/logout', auth.isLoggedIn, (req, res) => {
     req.logout(function(err) {
         if(err) {throw err}
         res.redirect('/')

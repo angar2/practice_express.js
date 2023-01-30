@@ -6,7 +6,7 @@ const template = require('../lib/template')
 const auth = require('../lib/auth')
 const db = require('../lib/db')
 
-router.get('/create', (req, res) => {
+router.get('/create', auth.isLoggedIn, (req, res) => {
     let title = 'Create'
     let authStatus = auth.Status(req, res)
     let body = template.bodyCreate(title, authStatus)
@@ -14,7 +14,7 @@ router.get('/create', (req, res) => {
     res.send(html)
 })
 
-router.post('/create', (req, res) => {
+router.post('/create', auth.isLoggedIn, (req, res) => {
     let post = req.body
     let user_id = req.user.id
     let title = post.title
